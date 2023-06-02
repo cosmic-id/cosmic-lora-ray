@@ -7,7 +7,7 @@
 ## Requirements
 
 * 2x [Cosmic LoRa Ray](https://www.tokopedia.com/cosmic-iot/lora-arduino-development-board-915mhz-915-mhz-antenna-charger)
-* 2x Micro USB Type B Cable for V1 or 2x USB Type C for V3
+* 2x Micro USB Type B Cable for LoRa Ray V1 or 2x USB Type C for LoRa Ray V3
 * [Arduino IDE](https://www.arduino.cc/en/software)
 
 ## Prerequisite
