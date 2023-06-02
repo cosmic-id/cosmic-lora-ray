@@ -25,8 +25,8 @@
 1. Plug the Cosmic LoRa Ray boards to your Laptop.
 2. COM Port should be activated. (If not activated? [Install CH340 driver](https://sparks.gogo.co.nz/ch340.html)).
 3. Setup in Arduino IDE :
-   * Pick the appropriate board : Tools -> Board -> Arduino Pro or Pro Mini
-   * Pick the appropriate processor : Tools -> Board -> ATMega 328P (3.3V 8 MHz)
+   * Pick the appropriate board : Tools -> Board -> **Arduino Pro or Pro Mini**
+   * Pick the appropriate processor : Tools -> Board -> **ATMega 328P (3.3V 8 MHz)**
 4. Setup Transmitter
    * Load [Transmitter code](examples/LoRa_P2P_Transmitter/LoRa_P2P_Transmitter.ino) to Arduino IDE.
    * Click Verify then Click Upload to Board. (Error compile? [Install LoRa Library](https://github.com/sandeepmistry/arduino-LoRa))
