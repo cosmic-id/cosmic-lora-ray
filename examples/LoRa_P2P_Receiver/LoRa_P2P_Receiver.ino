@@ -1,93 +1,55 @@
-// Arduino9x_RX
-// -*- mode: C++ -*-
-// Example sketch showing how to create a simple messaging client (receiver)
-// with the RH_RF95 class. RH_RF95 class does not provide for addressing or
-// reliability, so you should only use RH_RF95 if you do not need the higher
-// level messaging abilities.
-// It is designed to work with the other example Arduino9x_TX
+/*********
+  Modified from the examples of the Arduino LoRa library
+  More resources: https://github.com/cosmic-id/
+*********/
 
 #include <SPI.h>
-#include <RH_RF95.h>
+#include <LoRa.h>
 
-#define RFM95_CS 10
-#define RFM95_RST 9
-#define RFM95_INT 2
+// LoRa <-> Pro Mini Interface
+#define LORA_RAY_NSS  10
+#define LORA_RAY_RST  9
+#define LORA_RAY_DIO0 2
+#define LORA_RAY_DIO1 6
 
-// Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 915.0
-
-// Singleton instance of the radio driver
-RH_RF95 rf95(RFM95_CS, RFM95_INT);
-
-// Blinky on receipt
-#define LED 8
-
-void setup() 
-{
-  pinMode(LED, OUTPUT);     
-  pinMode(RFM95_RST, OUTPUT);
-  digitalWrite(RFM95_RST, HIGH);
-
+void setup() {  
+  //initialize Serial Monitor
+  Serial.begin(115200);
   while (!Serial);
-  Serial.begin(9600);
-  delay(100);
+  Serial.println("LoRa Receiver");
 
-  Serial.println("Arduino LoRa RX Test!");
+  //setup LoRa transceiver module
+  LoRa.setPins(LORA_RAY_NSS, LORA_RAY_RST, LORA_RAY_DIO0);
   
-  // manual reset
-  digitalWrite(RFM95_RST, LOW);
-  delay(10);
-  digitalWrite(RFM95_RST, HIGH);
-  delay(10);
-
-  while (!rf95.init()) {
-    Serial.println("LoRa radio init failed");
-    while (1);
+  //replace the LoRa.begin(---E-) argument with your location's frequency 
+  //Indonesia 920.0 - 923.0 MHz 
+  while (!LoRa.begin(920E6)) {
+    Serial.println(".");
+    delay(500);
   }
-  Serial.println("LoRa radio init OK!");
-
-  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
-  if (!rf95.setFrequency(RF95_FREQ)) {
-    Serial.println("setFrequency failed");
-    while (1);
-  }
-  Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
-
-  // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
-
-  // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
-  // you can set transmitter powers from 5 to 23 dBm:
-  rf95.setTxPower(23, false);
+  
+  // Change sync word (0xF3) to match the receiver
+  // The sync word assures you don't get LoRa messages from other LoRa transceivers
+  // ranges from 0-0xFF
+  LoRa.setSyncWord(0xF3);
+  Serial.println("LoRa Initializing OK!");
 }
 
-void loop()
-{
-  if (rf95.available())
-  {
-    // Should be a message for us now   
-    uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-    uint8_t len = sizeof(buf);
-    
-    if (rf95.recv(buf, &len))
-    {
-      digitalWrite(LED, HIGH);
-      RH_RF95::printBuffer("Received: ", buf, len);
-      Serial.print("Got: ");
-      Serial.println((char*)buf);
-       Serial.print("RSSI: ");
-      Serial.println(rf95.lastRssi(), DEC);
-      
-      // Send a reply
-      uint8_t data[] = "And hello back to you";
-      rf95.send(data, sizeof(data));
-      rf95.waitPacketSent();
-      Serial.println("Sent a reply");
-      digitalWrite(LED, LOW);
+void loop() {
+  // try to parse packet
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    // received a packet
+    Serial.print("Received packet '");
+
+    // read packet
+    while (LoRa.available()) {
+      String LoRaData = LoRa.readString();
+      Serial.print(LoRaData); 
     }
-    else
-    {
-      Serial.println("Receive failed");
-    }
+
+    // print RSSI of packet
+    Serial.print("' with RSSI ");
+    Serial.println(LoRa.packetRssi());
   }
 }
