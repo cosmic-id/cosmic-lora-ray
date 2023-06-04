@@ -1,14 +1,16 @@
 #define LED_PIN 8
 
 void setup() {
-  // put your setup code here, to run once:
+  // Initiate the LED PIN
   pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  digitalWrite(LED_PIN, HIGH);
-  delay(2000);
+  // LED is Active Low Mode
+  // Turning ON the LED
   digitalWrite(LED_PIN, LOW);
-  delay(2000);
+  delay(1000);
+  // Turning OFF the LED
+  digitalWrite(LED_PIN, HIGH);
+  delay(1000);
 }
