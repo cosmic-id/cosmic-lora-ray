@@ -24,7 +24,7 @@ bool newmessage = false;
 const sRFM_pins RFM_pins = {
   .CS = LORA_RAY_NSS,
   .RST = LORA_RAY_RST,
-  .DIO0 = LORA_RAY_DIO1,
+  .DIO0 = LORA_RAY_DIO0,
   .DIO1 = LORA_RAY_DIO1,
 };
 
