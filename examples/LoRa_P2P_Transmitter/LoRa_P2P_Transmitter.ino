@@ -12,9 +12,6 @@
 #define LORA_RAY_DIO0 2
 #define LORA_RAY_DIO1 6
 
-#define LORA_TX_POWER 20
-#define LORA_SPREADING_FACTOR 12
-
 int counter = 0;
 
 void setup() {
@@ -32,9 +29,6 @@ void setup() {
     Serial.println(".");
     delay(500);
   }
-
-  LoRa.setTxPower(LORA_TX_POWER, PA_OUTPUT_PA_BOOST_PIN);
-  LoRa.setSpreadingFactor(LORA_SPREADING_FACTOR);
   
   // Change sync word (0xF3) to match the receiver
   // The sync word assures you don't get LoRa messages from other LoRa transceivers
